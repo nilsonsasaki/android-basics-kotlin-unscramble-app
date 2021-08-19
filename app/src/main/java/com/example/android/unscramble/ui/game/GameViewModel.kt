@@ -3,38 +3,41 @@ package com.example.android.unscramble.ui.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 
-class GameViewModel:ViewModel() {
+class GameViewModel : ViewModel() {
     private var _score = 0
-    val score:Int get() =_score
-    private var currentWordCount = 0
-    private lateinit var _currentScrambledWord :String
+    val score: Int get() = _score
 
-    private var wordsList : MutableList<String> = mutableListOf()
-    private lateinit var currentWord: String
+    private var _currentWordCount = 0
+    val currentWordCount get() = _currentWordCount
 
+    private var wordsList: MutableList<String> = mutableListOf()
+    private lateinit var _currentWord: String
+    private val currentWord: String get() = _currentWord
+
+    private lateinit var _currentScrambledWord: String
     val currentScrambledWord: String
         get() = _currentScrambledWord
 
     init {
-        Log.d("GameFragment","GameViewModel created")
+        Log.d("GameFragment", "GameViewModel created")
         getNextWord()
     }
 
     private fun getNextWord() {
-        do{
-            currentWord = allWordsList.random()
-        }while (wordsList.contains(currentWord))
+        do {
+            _currentWord = allWordsList.random()
+        } while (wordsList.contains(_currentWord))
 
-        val tempWord = currentWord.toCharArray()
+        val tempWord = _currentWord.toCharArray()
         tempWord.shuffle()
 
-        while (tempWord.toString().equals(currentWord, false)) {
+        while (tempWord.toString().equals(_currentWord, false)) {
             tempWord.shuffle()
         }
 
         _currentScrambledWord = String(tempWord)
-        ++currentWordCount
-        wordsList.add(currentWord)
+        ++_currentWordCount
+        wordsList.add(_currentWord)
 
     }
 
@@ -47,6 +50,6 @@ class GameViewModel:ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("GameFragment","GameViewModel destroyed!")
+        Log.d("GameFragment", "GameViewModel destroyed!")
     }
 }
