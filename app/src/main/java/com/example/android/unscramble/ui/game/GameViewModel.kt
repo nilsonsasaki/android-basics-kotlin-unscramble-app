@@ -1,8 +1,12 @@
 package com.example.android.unscramble.ui.game
 
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.TtsSpan
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -17,8 +21,22 @@ class GameViewModel : ViewModel() {
     private val currentWord: String get() = _currentWord
 
     private val _currentScrambledWord = MutableLiveData<String>()
-    val currentScrambledWord: LiveData<String>
-        get() = _currentScrambledWord
+
+    val currentScrambledWord: LiveData<Spannable> = Transformations.map(_currentScrambledWord) {
+        if (it == null) {
+            SpannableString("")
+        } else {
+            val scrambledWord = it.toString()
+            val spannable: Spannable = SpannableString(scrambledWord)
+            spannable.setSpan(
+                TtsSpan.VerbatimBuilder(scrambledWord).build(),
+                0,
+                scrambledWord.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            spannable
+        }
+    }
 
     init {
         Log.d("GameFragment", "GameViewModel created")
@@ -38,20 +56,20 @@ class GameViewModel : ViewModel() {
         }
 
         _currentScrambledWord.value = String(tempWord)
-        _currentWordCount.value=(_currentWordCount.value)?.inc()
+        _currentWordCount.value = (_currentWordCount.value)?.inc()
         wordsList.add(_currentWord)
 
     }
 
     fun nextWord(): Boolean {
-        return if (currentWordCount.value!!< MAX_NO_OF_WORDS) {
+        return if (currentWordCount.value!! < MAX_NO_OF_WORDS) {
             getNextWord()
             true
         } else false
     }
 
     private fun increaseScore() {
-        _score.value =(_score.value)?.plus(SCORE_INCREASE)
+        _score.value = (_score.value)?.plus(SCORE_INCREASE)
     }
 
     fun isUserWordCorrect(playerWord: String): Boolean {
