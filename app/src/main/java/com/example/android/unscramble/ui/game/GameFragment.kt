@@ -100,15 +100,6 @@ class GameFragment : Fragment() {
     }
 
     /*
-     * Gets a random word for the list of words and shuffles the letters in it.
-     */
-    private fun getNextScrambledWord(): String {
-        val tempWord = allWordsList.random().toCharArray()
-        tempWord.shuffle()
-        return String(tempWord)
-    }
-
-    /*
      * Re-initializes the data in the ViewModel and updates the views with the new data, to
      * restart the game.
      */
@@ -138,13 +129,6 @@ class GameFragment : Fragment() {
         }
     }
 
-    /*
-     * Displays the next scrambled word on screen.
-     */
-    /*private fun updateNextWordOnScreen() {
-        binding.score.text = getString(R.string.score, viewModel.score)
-    }*/
-
     private fun showFinalScoreDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.congratulations))
@@ -159,8 +143,4 @@ class GameFragment : Fragment() {
             .show()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        Log.d("GameFragment", "GameFragment destroyed!")
-    }
 }
